@@ -1,4 +1,4 @@
-(function(window, document) {
+((window,document) -> 
 
   window.app = window.app || {};
 
@@ -6,33 +6,21 @@
   app.collections = {};
   app.views = {};
 
-  var MainRouter = Backbone.Router.extend({
-
+  MainRouter = Backbone.Router.extend
     routes: {
       '': 'home',
       'search/:query': 'search'
-    },
-
-    home: function() {
-      console.log('home');
-    },
-
-    search: function(query) {
-      console.log('search:', query);
     }
-  });
+    home: ->
+      console.log 'home'
+    search: (query) ->
+      console.log 'search', query
 
-  // app initialization
-  
-  app.router = new MainRouter();
 
-  // TODO: fetch models, collections, etc
-  
-  $(document).ready(function() {
+  app.router = new MainRouter()
 
-    Backbone.history.start({pushState: true});
-    
-  });
-  
+  $(document).ready ->
+    Backbone.history.start({pushState: true})
 
-})(window, document);
+
+  )(window, document)
