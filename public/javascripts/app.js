@@ -28,6 +28,11 @@
 
   // TODO: fetch models, collections, etc
   
-  Backbone.history.start({pushState: true});
+  $(document).ready(function() {
+
+    Backbone.history.start({pushState: true});
+    
+  });
+  
 
 })(window, document);
