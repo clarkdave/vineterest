@@ -7,7 +7,8 @@ var express = require('express'),
     routes = require('./routes'),
     user = require('./routes/user'),
     http = require('http'),
-    path = require('path');
+    path = require('path'),
+    sass = require('node-sass');
 
 var app = express();
 
@@ -22,7 +23,8 @@ app.configure(function(){
   app.use(express.cookieParser('cat dog horse cow'));
   app.use(express.session()); // TODO: set this use redis store
   app.use(app.router);
-  app.use(require('less-middleware')({ src: __dirname + '/public' }));
+  app.use(require('connect-assets')());
+  app.use(sass.middleware({ src: __dirname + '/assets', dest: __dirname + '/public' }));
   app.use(express.static(path.join(__dirname, 'public')));
 });
 

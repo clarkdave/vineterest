@@ -1,4 +1,4 @@
-(function(window, document) {
+`(function(window, document) {
 
   window.app = window.app || {};
 
@@ -35,4 +35,4 @@
   });
   
 
-})(window, document);
+})(window, document);`
