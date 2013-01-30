@@ -33,11 +33,22 @@
       tagName: 'ul'
       className: 'vine-grid'
       views: []
+      playing_index: 0
       registerEventsForGridElement: (element) ->
         element.on 'ended', =>
           index = @views.indexOf(element) + 1
           if index != 0 and index < @views.length
             @views[index].play()
+        element.on 'playing', =>
+
+          index = @views.indexOf(element)
+          console.log 'playing'
+          console.log index
+          if @playing_index != index
+            console.log 'hereka'
+            @views[@playing_index].pause()
+            @playing_index = index
+
       initialize: ->
         @model.on 'add', (vine) =>
           view = new window.app.views.VineGridElement model:vine
@@ -55,9 +66,6 @@
         $(window).scroll =>
           if $(window).scrollTop() + $(window).height() > $(document).height() - 100
             @model.fetchMore()
-        
-
-
         this
 
     VineGridElement: Backbone.View.extend
@@ -73,18 +81,33 @@
           <p><%= tweet %></p>
         </div>
       "
+      videoElement: null
       events:
         'click': 'play'
         'ended video': 'ended'
       ended: ->
         @trigger 'ended', this
+      playing: ->
+        @trigger 'playing', this
       play: ->
-        $("<video src='#{@model.get('video')}' autoplay>test</video>").insertAfter(@$('img'))
-        @$('video').on 'ended', =>
-          @ended()
-        @$('video')[0].play()
+        # attach it to dom
+        if !@videoElement?
+          $("<video src='#{@model.get('video')}' autoplay>test</video>").insertAfter(@$('img'))
+          @videoElement = @$('video')
+          @videoElement.on 'ended', =>
+            @ended()
+
+        # focus on it
+        scrollTop = @videoElement.offset().top - 60
+        if scrollTop > 500
+          $('body').animate({ scrollTop: @videoElement.offset().top - 60  }, 'slow');
+
+        # play it
+        @videoElement[0].play()
+        @trigger 'playing', this
       pause: ->
-        @$('video').remove()
+        if @videoElement
+          @videoElement[0].pause()
       initialize: ->
 
       render: ->
