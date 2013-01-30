@@ -8,6 +8,12 @@ a {
 }
 
 $vineedge: 300px;
+@mixin transition($property,$duration, $ease, $delay: 0s) {
+  -webkit-transition: $property $duration $ease $delay;
+  -moz-transition: $property $duration $ease $delay;
+  -o-transition: $property $duration $ease $delay;
+  transition: $property $duration $ease $delay;
+}
 
 ul.vine-grid {
   text-align: center;
@@ -17,7 +23,11 @@ ul.vine-grid {
     display: inline-block;
     width: $vineedge + 40px;
     margin: 10px;
-
+    opacity: 0;
+    @include transition(opacity, 2s, ease-in-out);
+    &.fadeIn {
+      opacity: 1;
+    }
     .media {
       position: relative;
       width: $vineedge;

@@ -28,8 +28,8 @@
           if index != 0 and index < @views.length
             @views[index].play()
       initialize: ->
-        @model.on 'add', (vine) ->
-          view = new window.app.views.VineGridElement model:model
+        @model.on 'add', (vine) =>
+          view = new window.app.views.VineGridElement model:vine
           @views.push view
           @$el.append view.render().el
       render: ->
@@ -61,9 +61,7 @@
       ended: ->
         @trigger 'ended', this
       play: ->
-
         $("<video src='#{@model.get('video')}' autoplay>test</video>").insertAfter(@$('img'))
-        
         @$('video').on 'ended', =>
           @ended()
         @$('video')[0].play()
@@ -73,7 +71,8 @@
 
       render: ->
         @$el.html @template(@model.toJSON())
-        
+        setTimeout (=>
+          @$el.addClass 'fadeIn'), 100
         this
 
   }
@@ -88,6 +87,9 @@
       view = new window.app.views.VineGrid({model: vines})
       view.render()
       $('#container').html(view.el)
+      setTimeout (->
+        vines.add([{video: 'https://vines.s3.amazonaws.com/videos/DA95E76B-43C5-434D-BA7F-4825E1DDD267-5798-000007997610F998_1.0.3.mp4?versionId=3ZgkjmBN6zh6xxBJhgLehVMOjH1cvXfb', image: 'https://vines.s3.amazonaws.com/thumbs/DA95E76B-43C5-434D-BA7F-4825E1DDD267-5798-000007997610F998_1.0.3.mp4.jpg?versionId=AIc5wFVpr5sUeDsT9MgdEYClj9URtZja', title: 'Nottingham in the snow', tweet: 'this is a cool hip tweet #cool #hip', user: {url: 'cool', name: '@dave', image: 'test'}, tweet_url: '', vine_url: ''},{video: 'https://vines.s3.amazonaws.com/videos/DA95E76B-43C5-434D-BA7F-4825E1DDD267-5798-000007997610F998_1.0.3.mp4?versionId=3ZgkjmBN6zh6xxBJhgLehVMOjH1cvXfb', image: 'https://vines.s3.amazonaws.com/thumbs/DA95E76B-43C5-434D-BA7F-4825E1DDD267-5798-000007997610F998_1.0.3.mp4.jpg?versionId=AIc5wFVpr5sUeDsT9MgdEYClj9URtZja', title: 'Nottingham in the snow', tweet: 'this is a cool hip tweet #cool #hip', user: {url: 'cool', name: '@dave', image: 'test'}, tweet_url: '', vine_url: ''}])
+        ), 5000
       
     search: (query) ->
       vines = new window.app.collections.Vines([{video: 'https://vines.s3.amazonaws.com/videos/DA95E76B-43C5-434D-BA7F-4825E1DDD267-5798-000007997610F998_1.0.3.mp4?versionId=3ZgkjmBN6zh6xxBJhgLehVMOjH1cvXfb', image: 'https://vines.s3.amazonaws.com/thumbs/DA95E76B-43C5-434D-BA7F-4825E1DDD267-5798-000007997610F998_1.0.3.mp4.jpg?versionId=AIc5wFVpr5sUeDsT9MgdEYClj9URtZja', title: 'Nottingham in the snow', tweet: 'this is a cool hip tweet #cool #hip', user: {url: 'cool', name: '@dave', image: 'test'}, tweet_url: '', vine_url: ''},{video: 'https://vines.s3.amazonaws.com/videos/DA95E76B-43C5-434D-BA7F-4825E1DDD267-5798-000007997610F998_1.0.3.mp4?versionId=3ZgkjmBN6zh6xxBJhgLehVMOjH1cvXfb', image: 'https://vines.s3.amazonaws.com/thumbs/DA95E76B-43C5-434D-BA7F-4825E1DDD267-5798-000007997610F998_1.0.3.mp4.jpg?versionId=AIc5wFVpr5sUeDsT9MgdEYClj9URtZja', title: 'Nottingham in the snow', tweet: 'this is a cool hip tweet #cool #hip', user: {url: 'cool', name: '@dave', image: 'test'}, tweet_url: '', vine_url: ''},{video: 'https://vines.s3.amazonaws.com/videos/DA95E76B-43C5-434D-BA7F-4825E1DDD267-5798-000007997610F998_1.0.3.mp4?versionId=3ZgkjmBN6zh6xxBJhgLehVMOjH1cvXfb', image: 'https://vines.s3.amazonaws.com/thumbs/DA95E76B-43C5-434D-BA7F-4825E1DDD267-5798-000007997610F998_1.0.3.mp4.jpg?versionId=AIc5wFVpr5sUeDsT9MgdEYClj9URtZja', title: 'Nottingham in the snow', tweet: 'this is a cool hip tweet #cool #hip', user: {url: 'cool', name: '@dave', image: 'test'}, tweet_url: '', vine_url: ''},{video: 'https://vines.s3.amazonaws.com/videos/DA95E76B-43C5-434D-BA7F-4825E1DDD267-5798-000007997610F998_1.0.3.mp4?versionId=3ZgkjmBN6zh6xxBJhgLehVMOjH1cvXfb', image: 'https://vines.s3.amazonaws.com/thumbs/DA95E76B-43C5-434D-BA7F-4825E1DDD267-5798-000007997610F998_1.0.3.mp4.jpg?versionId=AIc5wFVpr5sUeDsT9MgdEYClj9URtZja', title: 'Nottingham in the snow', tweet: 'this is a cool hip tweet #cool #hip', user: {url: 'cool', name: '@dave', image: 'test'}, tweet_url: '', vine_url: ''},{video: 'https://vines.s3.amazonaws.com/videos/DA95E76B-43C5-434D-BA7F-4825E1DDD267-5798-000007997610F998_1.0.3.mp4?versionId=3ZgkjmBN6zh6xxBJhgLehVMOjH1cvXfb', image: 'https://vines.s3.amazonaws.com/thumbs/DA95E76B-43C5-434D-BA7F-4825E1DDD267-5798-000007997610F998_1.0.3.mp4.jpg?versionId=AIc5wFVpr5sUeDsT9MgdEYClj9URtZja', title: 'Nottingham in the snow', tweet: 'this is a cool hip tweet #cool #hip', user: {url: 'cool', name: '@dave', image: 'test'}, tweet_url: '', vine_url: ''},{video: 'https://vines.s3.amazonaws.com/videos/DA95E76B-43C5-434D-BA7F-4825E1DDD267-5798-000007997610F998_1.0.3.mp4?versionId=3ZgkjmBN6zh6xxBJhgLehVMOjH1cvXfb', image: 'https://vines.s3.amazonaws.com/thumbs/DA95E76B-43C5-434D-BA7F-4825E1DDD267-5798-000007997610F998_1.0.3.mp4.jpg?versionId=AIc5wFVpr5sUeDsT9MgdEYClj9URtZja', title: 'Nottingham in the snow', tweet: 'this is a cool hip tweet #cool #hip', user: {url: 'cool', name: '@dave', image: 'test'}, tweet_url: '', vine_url: ''},{video: 'https://vines.s3.amazonaws.com/videos/DA95E76B-43C5-434D-BA7F-4825E1DDD267-5798-000007997610F998_1.0.3.mp4?versionId=3ZgkjmBN6zh6xxBJhgLehVMOjH1cvXfb', image: 'https://vines.s3.amazonaws.com/thumbs/DA95E76B-43C5-434D-BA7F-4825E1DDD267-5798-000007997610F998_1.0.3.mp4.jpg?versionId=AIc5wFVpr5sUeDsT9MgdEYClj9URtZja', title: 'Nottingham in the snow', tweet: 'this is a cool hip tweet #cool #hip', user: {url: 'cool', name: '@dave', image: 'test'}, tweet_url: '', vine_url: ''},{video: 'https://vines.s3.amazonaws.com/videos/DA95E76B-43C5-434D-BA7F-4825E1DDD267-5798-000007997610F998_1.0.3.mp4?versionId=3ZgkjmBN6zh6xxBJhgLehVMOjH1cvXfb', image: 'https://vines.s3.amazonaws.com/thumbs/DA95E76B-43C5-434D-BA7F-4825E1DDD267-5798-000007997610F998_1.0.3.mp4.jpg?versionId=AIc5wFVpr5sUeDsT9MgdEYClj9URtZja', title: 'Nottingham in the snow', tweet: 'this is a cool hip tweet #cool #hip', user: {url: 'cool', name: '@dave', image: 'test'}, tweet_url: '', vine_url: ''},{video: 'https://vines.s3.amazonaws.com/videos/DA95E76B-43C5-434D-BA7F-4825E1DDD267-5798-000007997610F998_1.0.3.mp4?versionId=3ZgkjmBN6zh6xxBJhgLehVMOjH1cvXfb', image: 'https://vines.s3.amazonaws.com/thumbs/DA95E76B-43C5-434D-BA7F-4825E1DDD267-5798-000007997610F998_1.0.3.mp4.jpg?versionId=AIc5wFVpr5sUeDsT9MgdEYClj9URtZja', title: 'Nottingham in the snow', tweet: 'this is a cool hip tweet #cool #hip', user: {url: 'cool', name: '@dave', image: 'test'}, tweet_url: '', vine_url: ''},{video: 'https://vines.s3.amazonaws.com/videos/DA95E76B-43C5-434D-BA7F-4825E1DDD267-5798-000007997610F998_1.0.3.mp4?versionId=3ZgkjmBN6zh6xxBJhgLehVMOjH1cvXfb', image: 'https://vines.s3.amazonaws.com/thumbs/DA95E76B-43C5-434D-BA7F-4825E1DDD267-5798-000007997610F998_1.0.3.mp4.jpg?versionId=AIc5wFVpr5sUeDsT9MgdEYClj9URtZja', title: 'Nottingham in the snow', tweet: 'this is a cool hip tweet #cool #hip', user: {url: 'cool', name: '@dave', image: 'test'}, tweet_url: '', vine_url: ''}])
