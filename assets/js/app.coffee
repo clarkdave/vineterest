@@ -39,11 +39,11 @@
           index = @views.indexOf(element) + 1
           if index != 0 and index < @views.length
             @views[index].play()
-        element.on 'playing', =>
 
+        element.on 'playing', =>
           index = @views.indexOf(element)
-          console.log 'playing'
-          console.log index
+          if @playing_index > @views.length - 5
+            @model.fetchMore()
           if @playing_index != index
             console.log 'hereka'
             @views[@playing_index].pause()
