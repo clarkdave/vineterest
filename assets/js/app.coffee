@@ -21,12 +21,25 @@
     VineGrid: Backbone.View.extend
       tagName: 'ul'
       className: 'vine-grid'
+      views: []
+      registerEventsForGridElement: (element) ->
+        element.on 'ended', =>
+          index = @views.indexOf(element) + 1
+          if index != 0 and index < @views.length
+            @views[index].play()
       initialize: ->
-
+        @model.on 'add', (vine) ->
+          view = new window.app.views.VineGridElement model:model
+          @views.push view
+          @$el.append view.render().el
       render: ->
+        @views = []
         for model in @model.models
           view = new window.app.views.VineGridElement model:model
+          @views.push view
           @$el.append view.render().el
+        _.map(@views, @registerEventsForGridElement, this)
+        @views[0].play()
         this
 
     VineGridElement: Backbone.View.extend
@@ -44,9 +57,15 @@
       "
       events:
         'click': 'play'
-        
+        'ended video': 'ended'
+      ended: ->
+        @trigger 'ended', this
       play: ->
+
         $("<video src='#{@model.get('video')}' autoplay>test</video>").insertAfter(@$('img'))
+        
+        @$('video').on 'ended', =>
+          @ended()
         @$('video')[0].play()
       pause: ->
         @$('video').remove()
