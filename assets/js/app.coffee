@@ -9,6 +9,17 @@
   window.app.collections = {
     Vines: Backbone.Collection.extend
       model: window.app.models.Vine
+      parse: (resp, options) ->
+        @next = resp.pagination.next
+        resp.data
+      fetch_in_progress: false
+      fetchMore: ->
+        # actually go fetch
+        if !@fetch_in_progress
+          @fetch_in_progress = true
+          vines = [{video: 'https://vines.s3.amazonaws.com/videos/DA95E76B-43C5-434D-BA7F-4825E1DDD267-5798-000007997610F998_1.0.3.mp4?versionId=3ZgkjmBN6zh6xxBJhgLehVMOjH1cvXfb', image: 'https://vines.s3.amazonaws.com/thumbs/DA95E76B-43C5-434D-BA7F-4825E1DDD267-5798-000007997610F998_1.0.3.mp4.jpg?versionId=AIc5wFVpr5sUeDsT9MgdEYClj9URtZja', title: 'Nottingham in the snow', tweet: 'this is a cool hip tweet #cool #hip', user: {url: 'cool', name: '@dave', image: 'test'}, tweet_url: '', vine_url: ''},{video: 'https://vines.s3.amazonaws.com/videos/DA95E76B-43C5-434D-BA7F-4825E1DDD267-5798-000007997610F998_1.0.3.mp4?versionId=3ZgkjmBN6zh6xxBJhgLehVMOjH1cvXfb', image: 'https://vines.s3.amazonaws.com/thumbs/DA95E76B-43C5-434D-BA7F-4825E1DDD267-5798-000007997610F998_1.0.3.mp4.jpg?versionId=AIc5wFVpr5sUeDsT9MgdEYClj9URtZja', title: 'Nottingham in the snow', tweet: 'this is a cool hip tweet #cool #hip', user: {url: 'cool', name: '@dave', image: 'test'}, tweet_url: '', vine_url: ''}]
+          @add vines
+          @fetch_in_progress = false
   }
   window.app.views = {
     HeaderView: Backbone.View.extend
@@ -40,6 +51,13 @@
           @$el.append view.render().el
         _.map(@views, @registerEventsForGridElement, this)
         @views[0].play()
+        console.log 'sdsd'
+        $(window).scroll =>
+          if $(window).scrollTop() + $(window).height() > $(document).height() - 100
+            @model.fetchMore()
+        
+
+
         this
 
     VineGridElement: Backbone.View.extend
@@ -88,7 +106,7 @@
       view.render()
       $('#container').html(view.el)
       setTimeout (->
-        vines.add([{video: 'https://vines.s3.amazonaws.com/videos/DA95E76B-43C5-434D-BA7F-4825E1DDD267-5798-000007997610F998_1.0.3.mp4?versionId=3ZgkjmBN6zh6xxBJhgLehVMOjH1cvXfb', image: 'https://vines.s3.amazonaws.com/thumbs/DA95E76B-43C5-434D-BA7F-4825E1DDD267-5798-000007997610F998_1.0.3.mp4.jpg?versionId=AIc5wFVpr5sUeDsT9MgdEYClj9URtZja', title: 'Nottingham in the snow', tweet: 'this is a cool hip tweet #cool #hip', user: {url: 'cool', name: '@dave', image: 'test'}, tweet_url: '', vine_url: ''},{video: 'https://vines.s3.amazonaws.com/videos/DA95E76B-43C5-434D-BA7F-4825E1DDD267-5798-000007997610F998_1.0.3.mp4?versionId=3ZgkjmBN6zh6xxBJhgLehVMOjH1cvXfb', image: 'https://vines.s3.amazonaws.com/thumbs/DA95E76B-43C5-434D-BA7F-4825E1DDD267-5798-000007997610F998_1.0.3.mp4.jpg?versionId=AIc5wFVpr5sUeDsT9MgdEYClj9URtZja', title: 'Nottingham in the snow', tweet: 'this is a cool hip tweet #cool #hip', user: {url: 'cool', name: '@dave', image: 'test'}, tweet_url: '', vine_url: ''}])
+        vines.fetchMore()
         ), 5000
       
     search: (query) ->
