@@ -57,29 +57,46 @@
           @registerEventsForGridElement view
       render: ->
         @views = []
+
+        view = new app.views.VineGridAbout()
+        @$el.append view.render().el
+
         for model in @model.models
           view = new window.app.views.VineGridElement model:model
           @views.push view
           @$el.append view.render().el
         _.map(@views, @registerEventsForGridElement, this)
-        @views[0].play()
+        # @views[0].play()
         
         $(window).scroll =>
           if $(window).scrollTop() + $(window).height() > $(document).height() - 100
             @model.fetchMore()
         this
-
-    VineGridElement: Backbone.View.extend
+    VineGridAbout: Backbone.View.extend
       tagName: 'li'
       template: _.template "
-        <h4 class='subheader'><%= title %></h4>
+        <div class='dummy'></div>
+        <div class='content'>
+          <h3>Vineterest man</h3>
+        </div>
+        
+      "
+      render: ->
+        @$el.html @template()
+        this
+    VineGridElement: Backbone.View.extend
+      tagName: 'li'
+      className: 'vine-grid-element'
+      template: _.template "
+        <div class='dummy'></div>
         <div class='media'>
           <img src='<%= image %>' alt=''>
           <div class='border'></div>
         </div>
-        <div class='tweet'>
-          <a href='<%= user.url %>'><%= user.name %></a>:
-          <p><%= tweet %></p>
+        <div class='shadow'>
+          <div class='tweet'>
+            <a href='<%= user.url %>'><%= user.name %></a>: <%= tweet %>
+          </div>
         </div>
       "
       videoElement: null
@@ -87,6 +104,7 @@
         'click': 'play'
         'ended video': 'ended'
       ended: ->
+        @$('.shadow').removeClass 'play'
         @trigger 'ended', this
       playing: ->
         @trigger 'playing', this
@@ -96,22 +114,23 @@
           $("<video src='#{@model.get('video')}' autoplay>test</video>").insertAfter(@$('img'))
           @videoElement = @$('video')
           @videoElement.on 'ended', =>
+            @$('.shadow').removeClass 'play'
             @ended()
 
         # focus on it
         scrollTop = @videoElement.offset().top - 60
         currentScrollTop = $('body').scrollTop()
-        console.log scrollTop
-        console.log currentScrollTop
         if scrollTop > 500 and currentScrollTop < scrollTop + 500 and currentScrollTop > scrollTop - 500
           $('body').animate({ scrollTop: @videoElement.offset().top - 60  }, 'slow');
 
+        @$('.shadow').addClass 'play'
         # play it
         @videoElement[0].play()
         @trigger 'playing', this
       pause: ->
         if @videoElement
           @videoElement[0].pause()
+        @$('.shadow').removeClass 'play'
       initialize: ->
 
       render: ->
@@ -146,8 +165,8 @@
   window.app.router = new MainRouter()
 
   $(document).ready ->
-    view = new window.app.views.HeaderView el: $('header')
-    view.render()
+    # view = new window.app.views.HeaderView el: $('header')
+    #     view.render()
     Backbone.history.start({pushState: true})
 
 )(window, document)

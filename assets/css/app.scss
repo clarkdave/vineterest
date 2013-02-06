@@ -18,40 +18,82 @@ $vineedge: 300px;
 ul.vine-grid {
   text-align: center;
   li {
+    position: relative;
+    margin: 0;
+    margin-top: -6px;
     text-align: left;
     list-style: none;
     display: inline-block;
-    width: $vineedge + 40px;
-    margin: 10px;
-    opacity: 0;
+    width: 25%;
+    float: left;
+    &.vine-grid-element {
+      opacity: 0;
+    }
     @include transition(opacity, 2s, ease-in-out);
     &.fadeIn {
       opacity: 1;
     }
-    .media {
-      position: relative;
-      width: $vineedge;
-      height: $vineedge;
-      margin: 20px;
+    .dummy {
+      margin-top: 100%;
     }
+    .media {
+      position: absolute;
+         top: 0;
+         bottom: 0;
+         left: 0;
+         right: 0;
+         background-color: silver;
+    }
+    .content {
+       position: absolute;
+         top: 0;
+         bottom: 0;
+         left: 0;
+         right: 0;
+         background-color: green;
+         color: white;
+         h3 {
+          color: white;
+         }
+    }
+    .shadow {
+      box-shadow: inset 1px 1px 59px 16px black;
+      @include transition(box-shadow, 0.2s, ease-in-out);
+      &:hover, &.play {
+        box-shadow: inset 1px 1px 19px 0px black;
+        cursor: pointer;
+        .tweet {
+          display: block;
+        }
+      }
 
+      .tweet {
+        position: absolute;
+        display: none;
+        bottom: 5px;
+        left: 5px;
+        color: white;
+        background-color: rgba(0,0,0,0.7);
+        padding: 3px 6px ;
+        border-radius: 4px;
+      }
+
+      position: absolute;
+         top: 0;
+         bottom: 0;
+         left: 0;
+         right: 0;
+         
+    }
     video, img {
-      border-radius: 20px;
       position: absolute;
       top: 0px;
-      left: -20px;
       width: 100%;
       height: 100%;
     }
 
     .border {
-      position: absolute;
-      top: -20px;
-      left: -40px;
-      width: $vineedge + 40px;
-      height: $vineedge + 40px;
-      border: 20px solid white;
-      border-radius: 40px;
+
     }
 
   }
