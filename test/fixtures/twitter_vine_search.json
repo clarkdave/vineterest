@@ -7,25 +7,65 @@
       "id": 1024,
       "from_user": "clarkdave",
       "profile_image_url": "http://example.com/a",
-      "text": "Lorem ipsum"
+      "text": "Lorem ipsum",
+      "urls": [
+        {
+          "url": "http://t.co/abc",
+          "expanded_url": "http://vine.co/v/wofkoei"
+        },
+        {
+          "url": "http://t.co/feo",
+          "expanded_url": "http://google.com"
+        }
+      ]
     },
     {
       "id": 1025,
       "from_user": "clarkdave",
       "profile_image_url": "http://example.com/a",
-      "text": "Lorem ipsum"
+      "text": "Lorem ipsum",
+      "urls": [
+        {
+          "url": "http://t.co/abc",
+          "expanded_url": "http://vine.co/v/wofkoei"
+        },
+        {
+          "url": "http://t.co/feo",
+          "expanded_url": "http://google.com"
+        }
+      ]
     },
     {
       "id": 1026,
       "from_user": "clarkdave",
       "profile_image_url": "http://example.com/a",
-      "text": "Lorem ipsum"
+      "text": "Lorem ipsum",
+      "urls": [
+        {
+          "url": "http://t.co/abc",
+          "expanded_url": "http://vine.co/v/wofkoei"
+        },
+        {
+          "url": "http://t.co/feo",
+          "expanded_url": "http://google.com"
+        }
+      ]
     },
     {
       "id": 1027,
       "from_user": "clarkdave",
       "profile_image_url": "http://example.com/a",
-      "text": "Lorem ipsum"
+      "text": "Lorem ipsum",
+      "urls": [
+        {
+          "url": "http://t.co/abc",
+          "expanded_url": "http://vine.co/v/wofkoei"
+        },
+        {
+          "url": "http://t.co/feo",
+          "expanded_url": "http://google.com"
+        }
+      ]
     }
   ]
 }

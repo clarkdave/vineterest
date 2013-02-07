@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1024,
+    "text": "Lorem ipsum",
+    "user": {
+      "name": "clarkdave",
+      "image": "http://example.com/a"
+    },
+    "url": "http://vine.co/v/wofkoei"
+  },
+  {
+    "id": 1025,
+    "text": "Lorem ipsum",
+    "user": {
+      "name": "clarkdave",
+      "image": "http://example.com/a"
+    },
+    "url": "http://vine.co/v/wofkoei"
+  },
+  {
+    "id": 1026,
+    "text": "Lorem ipsum",
+    "user": {
+      "name": "clarkdave",
+      "image": "http://example.com/a"
+    },
+    "url": "http://vine.co/v/wofkoei"
+  },
+  {
+    "id": 1027,
+    "text": "Lorem ipsum",
+    "user": {
+      "name": "clarkdave",
+      "image": "http://example.com/a"
+    },
+    "url": "http://vine.co/v/wofkoei"
+  }
+]

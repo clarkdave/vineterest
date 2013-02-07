@@ -17,6 +17,7 @@
     "node-sass": "*",
     "connect-assets": "*",
     "nconf": "*",
+    "winston": "*",
     "request": "*",
     "underscore": "*",
     "hiredis": "*",

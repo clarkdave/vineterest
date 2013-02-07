@@ -22,7 +22,7 @@ describe 'Collector', ->
         fn null, {}, require('./fixtures/twitter_vine_search')
 
       await collector.getVineTweets defer tweets
-      request.firstCall.args[0].url.should.match /q=%23vine/
+      request.firstCall.args[0].url.should.match /q=vine.co/
       tweets.length.should.eql 4
       tweets[0].should.eql {
         id: 1024
@@ -30,6 +30,7 @@ describe 'Collector', ->
         user:
           name: 'clarkdave'
           image: 'http://example.com/a'
+        url: 'http://vine.co/v/wofkoei'
       }
 
       request.restore()
@@ -40,7 +41,7 @@ describe 'Collector', ->
         fn null, {}, require('./fixtures/twitter_vine_search')
 
       await collector.getVineTweets 'cat', defer tweets
-      request.firstCall.args[0].url.should.match /q=cat%20%23vine/
+      request.firstCall.args[0].url.should.match /q=cat%20vine.co/
       tweets.length.should.eql 4
 
       request.restore()
@@ -54,34 +55,35 @@ describe 'Collector', ->
     before ->
       collector = new Collector()
 
-    it 'should ignore non-vine tweets', (done) ->
-      stub = sinon.stub collector.request, 'head', (url, fn) ->
-        fn null, request: { uri: { host: 'tumblr.com' } }
+    # it 'should ignore non-vine tweets', (done) ->
+    #   stub = sinon.stub collector.request, 'head', (url, fn) ->
+    #     fn null, request: { uri: { host: 'tumblr.com' } }
 
-      await collector.processTweet {
-        id: 1024
-        text: 'Lorem ipsum #vine http://t.co/ayxiwk0'
-        user:
-          name: 'clarkdave'
-          image: 'http://example.com/a'
-      }, defer vine
+    #   await collector.processTweet {
+    #     id: 1024
+    #     text: 'Lorem ipsum #vine http://t.co/ayxiwk0'
+    #     user:
+    #       name: 'clarkdave'
+    #       image: 'http://example.com/a'
+    #   }, defer vine
 
-      should.not.exist vine
+    #   should.not.exist vine
 
-      stub.restore()
-      done()
+    #   stub.restore()
+    #   done()
 
     it 'should process vine tweets', (done) ->
-      sinon.stub collector.request, 'head', (url, fn) ->
-        fn null, request: { uri: { host: 'vine.co' } }
+      # sinon.stub collector.request, 'head', (url, fn) ->
+      #   fn null, request: { uri: { host: 'vine.co' } }
 
-      sinon.stub collector.request, 'get', (url, fn) ->
+      req = sinon.stub collector.request, 'get', (url, fn) ->
         html = fs.readFileSync(__dirname + '/fixtures/vine_page.html', 'utf8')
         fn null, {}, html
 
       await collector.processTweet {
         id: 1024
-        text: 'Lorem ipsum #vine http://t.co/ayxiwk0'
+        text: 'Lorem ipsum #vine vine.co/v/ayxiwk0'
+        url: 'http://vine.co/v/ayxiwk0'
         user:
           name: 'clarkdave'
           image: 'http://example.com/a'
@@ -89,9 +91,10 @@ describe 'Collector', ->
 
       should.exist vine
       vine.should.eql {
+        id: 1024
+        url: 'http://vine.co/v/ayxiwk0'
         tweet:
-          id: 1024
-          text: 'Lorem ipsum #vine http://t.co/ayxiwk0'
+          text: 'Lorem ipsum #vine vine.co/v/ayxiwk0'
           user:
             name: 'clarkdave'
             image: 'http://example.com/a'
@@ -99,6 +102,20 @@ describe 'Collector', ->
         video: 'https://vines.s3.amazonaws.com/videos/CA5345A2-88F2-4434-829B-7651027064A2-2160-000001F544A71EAB_1.0.5.mp4?versionId=._SuVJ_bn4xpvzKJbYllJ44g8Huxe0ID'
       }
 
-
-
+      req.restore()
       done()
+
+  describe 'loadVines', ->
+
+    collector = null
+
+    before ->
+      collector = new Collector()
+
+    # it 'should load vines', (done) ->
+    #   getVineTweets = sinon.stub collector.getVineTweets (fn) ->
+    #     fn require('./fixtures/tweets')
+
+    #   await collector.loadVines defer vines
+
+    #   done()
