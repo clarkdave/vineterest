@@ -1,4 +1,5 @@
-var Jungle = require('../lib/jungle'),
+var ics = require('iced-coffee-script'),
+    Jungle = require('../lib/jungle'),
     jungle = new Jungle()
 ;
 
@@ -40,6 +41,7 @@ exports.vines = function(req, res) {
   ;
 
   jungle.getRecentVines(function(vines) {
+    console.log(vines);
     res.send(200);
   });
 

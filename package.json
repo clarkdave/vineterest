@@ -23,6 +23,7 @@
     "hiredis": "*",
     "redis": "*",
     "coffee-script": "*",
-    "iced-coffee-script": "*"
+    "iced-coffee-script": "*",
+    "kue": "*"
   }
 }

@@ -91,9 +91,23 @@ class Collector
 
   processTweet: (tweet, fn) ->
 
+    await redis.get "vine_#{tweet.id}", defer err, vine
+    if vine?
+      return fn JSON.parse(vine)
+
+    # we cache even if the vine is null, because that way we know it's a dud and won't
+    # check it again in future
+    cacheVine = (id, vine) ->
+      redis.set "vine_#{id}", JSON.stringify(vine)
+
     vine_url = tweet.url
-    return fn(null) unless vine_url?
+    unless vine_url?
+      cacheVine(tweet.id, null)
+      return fn(null)
     
+    # have we processed this tweet already? if so, we won't waste time processing it again
+    
+
     # not all #vine tweets actually contain a url to a vine, so to avoid
     # requesting stupid amounts of html we'll check first...
     # await @request.head url: 'http://' + url, followAllRedirects: true, defer err, response
@@ -118,9 +132,11 @@ class Collector
     m = body.match /property="twitter:player:stream"\s+content="([^"]+)"/
     vine.video = m[1] if m?
 
+    cacheVine(vine.id, vine)
+
     unless vine.image and vine.video
-      logger.error 'Could not get Vine image or video for <http://' + url + '>'
-      return fn()
+      logger.error 'Could not get Vine image or video for ' + vine_url + '>', vine
+      return fn(null)
     
     fn(vine)
 
