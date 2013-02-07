@@ -1,2 +1,0 @@
-Jungle = require('../lib/jungle')
-

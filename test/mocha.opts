@@ -1,5 +1,5 @@
 --require should
 --globals should
 --recursive
---compilers coffee:coffee-script
+--compilers coffee:coffee-script,iced:iced-coffee-script
 --reporter spec
