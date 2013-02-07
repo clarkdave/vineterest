@@ -139,6 +139,7 @@
 
           @$('.shadow').addClass 'play'
           @trigger 'playing', this
+          @trigger 'buffer', this
       canplay: ->
         @$('.shadow').removeClass 'loading'
       waiting: ->
