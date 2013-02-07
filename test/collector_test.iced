@@ -16,13 +16,13 @@ describe 'Collector', ->
     before ->
       collector = new Collector()
 
-    it 'should get vine tweets', (done) ->
-      # make restler return some tweets
-      
-      stub = sinon.stub collector.request, 'get', (opts, fn) ->
+    it 'should get vine tweets without search string', (done) ->
+      # make request return some tweets
+      request = sinon.stub collector.request, 'get', (opts, fn) ->
         fn null, {}, require('./fixtures/twitter_vine_search')
 
       await collector.getVineTweets defer tweets
+      request.firstCall.args[0].url.should.match /q=%23vine/
       tweets.length.should.eql 4
       tweets[0].should.eql {
         id: 1024
@@ -32,8 +32,20 @@ describe 'Collector', ->
           image: 'http://example.com/a'
       }
 
-      stub.restore()
+      request.restore()
       done()
+
+    it 'should get vine tweets with a search string', (done) ->
+      request = sinon.stub collector.request, 'get', (opts, fn) ->
+        fn null, {}, require('./fixtures/twitter_vine_search')
+
+      await collector.getVineTweets 'cat', defer tweets
+      request.firstCall.args[0].url.should.match /q=cat%20%23vine/
+      tweets.length.should.eql 4
+
+      request.restore()
+      done()
+
 
   describe 'processTweet', ->
 
@@ -59,7 +71,6 @@ describe 'Collector', ->
       stub.restore()
       done()
 
-
     it 'should process vine tweets', (done) ->
       sinon.stub collector.request, 'head', (url, fn) ->
         fn null, request: { uri: { host: 'vine.co' } }
@@ -77,5 +88,17 @@ describe 'Collector', ->
       }, defer vine
 
       should.exist vine
+      vine.should.eql {
+        tweet:
+          id: 1024
+          text: 'Lorem ipsum #vine http://t.co/ayxiwk0'
+          user:
+            name: 'clarkdave'
+            image: 'http://example.com/a'
+        image: 'https://vines.s3.amazonaws.com/thumbs/CA5345A2-88F2-4434-829B-7651027064A2-2160-000001F544A71EAB_1.0.5.mp4.jpg?versionId=OXVqPOozqG9cxKLt455bwj0B0gay7pfK'
+        video: 'https://vines.s3.amazonaws.com/videos/CA5345A2-88F2-4434-829B-7651027064A2-2160-000001F544A71EAB_1.0.5.mp4?versionId=._SuVJ_bn4xpvzKJbYllJ44g8Huxe0ID'
+      }
+
+
 
       done()

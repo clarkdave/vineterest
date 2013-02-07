@@ -1,5 +1,6 @@
 config = require('../config')
 redis = require('redis')
+_ = require('underscore')
 
 class Collector
 
@@ -9,10 +10,22 @@ class Collector
 
   constructor: ->
 
+  ##
+  # Takes up to two args:
+  # - search_string, fn
+  # - fn
+  ##
+  getVineTweets: (args...) ->
 
-  getVineTweets: (fn) ->
+    fn = args.pop()
+
+    if _(args).isEmpty()
+      search = '#vine'
+    else
+      search = args.pop() + ' #vine'
+
     url = @searchUrl +
-    '?q=' + encodeURIComponent('#vine') +
+    '?q=' + encodeURIComponent(search) +
     '&include_entities=true' +
     '&rpp=50'
 
@@ -32,13 +45,6 @@ class Collector
 
     fn(tweets)
 
-    # vines = []
-
-    # # in 'parallel', look up the vine information for each tweet
-    # # await
-    # #   for tweet in data.results
-    # await @transformTweetIntoVine data.results[0], defer vine
-
 
   processTweet: (tweet, fn) ->
     
@@ -57,7 +63,6 @@ class Collector
     
     vine =
       tweet: tweet
-
 
     m = body.match /property="twitter:image"\s+content="([^"]+)"/
     vine.image = m[1] if m?
