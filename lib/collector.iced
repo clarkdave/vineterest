@@ -74,12 +74,13 @@ class Collector
 
     # tidy up these tweets a bit
     tweets = body.results.map (t) ->
+      
       id: t.id
       text: t.text
       user:
         name: t.from_user
         image: t.profile_image_url
-      url: t.urls.filter( (u) -> u.expanded_url.match /vine.co/ ).map( (u) -> u.expanded_url )[0]
+      url: t.entities.urls.filter( (u) -> u.expanded_url.match /vine.co/ ).map( (u) -> u.expanded_url )[0]
 
 
     # TODO: stash in redis the metadata about this request, so we know
