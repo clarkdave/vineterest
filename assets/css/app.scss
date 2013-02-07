@@ -29,6 +29,7 @@ ul.vine-grid {
       opacity: 0;
     }
     @include transition(opacity, 2s, ease-in-out);
+    
     &.fadeIn {
       opacity: 1;
     }
@@ -57,15 +58,27 @@ ul.vine-grid {
     }
     .shadow {
       box-shadow: inset 1px 1px 59px 16px black;
+      background-color: rgba(0,0,0,0.7);
       @include transition(box-shadow, 0.2s, ease-in-out);
       &:hover, &.play {
         box-shadow: inset 1px 1px 19px 0px black;
+        background: none;
         cursor: pointer;
         .tweet {
           display: block;
         }
       }
 
+      &.loading.play:after {
+        position: absolute;
+        content: 'Loading ...';
+        color: white;
+        background-color: rgba(0,0,0,0.6);
+        padding: 0px 15px;
+        border-radius: 5px;
+        left: 10px;
+        top: 10px;
+      }
       .tweet {
         position: absolute;
         display: none;

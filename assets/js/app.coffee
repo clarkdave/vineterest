@@ -38,7 +38,7 @@
           if index != 0 and index < @views.length
             @playing_index = index
             @views[index].play()
-
+            @buffer()
         element.on 'playing', =>
           index = @views.indexOf(element)
           if @playing_index > @views.length - 5
@@ -46,7 +46,11 @@
           if @playing_index != index
             @views[@playing_index].pause()
             @playing_index = index
-
+        element.on 'buffer', @buffer, this
+      buffer: ->
+        index = @playing_index + 1
+        if index != 0 and index < @views.length
+          @views[index].prepareVideo()
       initialize: ->
         @model.on 'add', (vine) =>
           view = new app.views.VineGridElement model:vine
@@ -98,37 +102,63 @@
         </div>
       "
       videoElement: null
+      playing: false
+      focus: false
+
       events:
-        'click': 'play'
-        'ended video': 'ended'
+        'click': 'click'
+
+      click: ->
+        @renderVideoElement()
+        if @focus
+          @focus = false
+          @pauseVideo()
+        else
+          @focus = true
+          @playVideo()
+        return false
+      renderVideoElement: ->
+        if !@videoElement?
+          $("<video src='#{@model.get('video')}'></video>").insertAfter(@$('img'))
+          @videoElement = @$('video')
+          @videoElement.on 'waiting', _.bind(@waiting, this)
+          @videoElement.on 'canplay', _.bind(@canplay, this)
+          @videoElement.on 'ended', _.bind(@ended, this)
+      pauseVideo: ->
+        if @videoElement?
+          @videoElement[0].pause()
+      playVideo: ->
+        if @videoElement?
+          @videoElement[0].play()
+
+          # scroll to it
+          scrollTop = @videoElement.offset().top - 60
+          currentScrollTop = $('body').scrollTop()
+          if scrollTop > 500 and currentScrollTop < scrollTop + 500 and currentScrollTop > scrollTop - 500
+            $('body').animate({ scrollTop: @videoElement.offset().top - 60  }, 'slow');
+
+          @$('.shadow').addClass 'play'
+          @trigger 'playing', this
+      canplay: ->
+        @$('.shadow').removeClass 'loading'
+      waiting: ->
+        @$('.shadow').addClass 'loading'
       ended: ->
         @$('.shadow').removeClass 'play'
         @trigger 'ended', this
       playing: ->
         @trigger 'playing', this
       play: ->
-        # attach it to dom
-        if !@videoElement?
-          $("<video src='#{@model.get('video')}' autoplay>test</video>").insertAfter(@$('img'))
-          @videoElement = @$('video')
-          @videoElement.on 'ended', =>
-            @$('.shadow').removeClass 'play'
-            @ended()
-
-        # focus on it
-        scrollTop = @videoElement.offset().top - 60
-        currentScrollTop = $('body').scrollTop()
-        if scrollTop > 500 and currentScrollTop < scrollTop + 500 and currentScrollTop > scrollTop - 500
-          $('body').animate({ scrollTop: @videoElement.offset().top - 60  }, 'slow');
-
-        @$('.shadow').addClass 'play'
-        # play it
-        @videoElement[0].play()
-        @trigger 'playing', this
+        @focus = true
+        @renderVideoElement()
+        @playVideo()
       pause: ->
         if @videoElement
           @videoElement[0].pause()
+        @focus = false
         @$('.shadow').removeClass 'play'
+      prepareVideo: ->
+        @renderVideoElement()
       initialize: ->
 
       render: ->
