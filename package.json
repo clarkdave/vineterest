@@ -9,9 +9,7 @@
     "nodemon": "*",
     "mocha": "*",
     "should": "*",
-    "sinon": "*",
-    "coffee-script": "*",
-    "iced-coffee-script": "*"
+    "sinon": "*"
   },
   "dependencies": {
     "express": "3.1.0",
@@ -19,9 +17,11 @@
     "node-sass": "*",
     "connect-assets": "*",
     "nconf": "*",
-    "restler": "*",
+    "request": "*",
     "underscore": "*",
     "hiredis": "*",
-    "redis": "*"
+    "redis": "*",
+    "coffee-script": "*",
+    "iced-coffee-script": "*"
   }
 }
