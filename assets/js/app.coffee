@@ -134,7 +134,9 @@
           # scroll to it
           scrollTop = @videoElement.offset().top - 60
           currentScrollTop = $('body').scrollTop()
-          if scrollTop > 500 and currentScrollTop < scrollTop + 500 and currentScrollTop > scrollTop - 500
+          console.log currentScrollTop
+          console.log scrollTop
+          if scrollTop > 400 and currentScrollTop < scrollTop + 600 and currentScrollTop > scrollTop - 600
             $('body').animate({ scrollTop: @videoElement.offset().top - 60  }, 'slow');
 
           @$('.shadow').addClass 'play'
@@ -142,7 +144,8 @@
           @trigger 'buffer', this
       canplay: ->
         @$('.shadow').removeClass 'loading'
-        @spinner.stop()
+        if @spinner?
+          @spinner.stop()
       waiting: ->
         target = @$('.shadow')[0]
         @spinner = new Spinner({}).spin(target);
