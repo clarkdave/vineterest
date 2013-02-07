@@ -142,7 +142,10 @@
           @trigger 'buffer', this
       canplay: ->
         @$('.shadow').removeClass 'loading'
+        @spinner.stop()
       waiting: ->
+        target = @$('.shadow')[0]
+        @spinner = new Spinner({}).spin(target);
         @$('.shadow').addClass 'loading'
       ended: ->
         @$('.shadow').removeClass 'play'

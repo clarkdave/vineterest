@@ -79,6 +79,13 @@ ul.vine-grid {
         left: 10px;
         top: 10px;
       }
+      &.spinner {
+        display: none;
+      }
+      
+      &.play.spinner {
+        display: block;
+      }
       .tweet {
         position: absolute;
         display: none;
