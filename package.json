@@ -12,6 +12,9 @@
     "express": "3.1.0",
     "ejs": "*",
     "node-sass": "*",
-    "connect-assets": "*"
+    "connect-assets": "*",
+    "nconf": "*",
+    "restler": "*",
+    "underscore": "*"
   }
 }
