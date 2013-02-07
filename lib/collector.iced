@@ -29,6 +29,7 @@ class Collector
         @getVineTweets search, defer tweets
 
     vines = []
+    @cache_hits = 0
 
     # process vines in parallel (or this will take aaaaaages)
     logger.info 'Downloading Vine video/image information...'
@@ -37,6 +38,9 @@ class Collector
         @processTweet tweet, defer vines[i]
 
     vines = vines.filter (v) -> v?
+
+    if @cache_hits
+      logger.info(@cache_hits + ' vine cache hits')
 
     # we have vines?
     if _(vines).isEmpty()
@@ -91,32 +95,19 @@ class Collector
 
   processTweet: (tweet, fn) ->
 
-    await redis.get "vine_#{tweet.id}", defer err, vine
-    if vine?
-      return fn JSON.parse(vine)
-
-    # we cache even if the vine is null, because that way we know it's a dud and won't
-    # check it again in future
-    cacheVine = (id, vine) ->
-      redis.set "vine_#{id}", JSON.stringify(vine)
+    
 
     vine_url = tweet.url
     unless vine_url?
-      cacheVine(tweet.id, null)
       return fn(null)
-    
-    # have we processed this tweet already? if so, we won't waste time processing it again
-    
 
-    # not all #vine tweets actually contain a url to a vine, so to avoid
-    # requesting stupid amounts of html we'll check first...
-    # await @request.head url: 'http://' + url, followAllRedirects: true, defer err, response
-    
-    # return fn(null) unless response.request.uri.host is @vineHost
+    vine_url_key = vine_url.replace /https?:\/\//, '' 
 
-    # now fetch the vine page, and regex out what we need
-    await @request.get vine_url, defer err, response, body
-    
+    # we cache even if the vine is null, because that way we know it's a dud and won't
+    # check it again in future
+    cache = (data) ->
+      redis.hset "all_vines", vine_url_key, JSON.stringify(data)
+
     vine =
       id: tweet.id
       url: vine_url
@@ -126,18 +117,33 @@ class Collector
 
     vine.tweet = tweet
 
+    # check if we have the video/image info cached for this vine
+    await redis.hget "all_vines", vine_url_key, defer err, data
+    if data?
+      data = JSON.parse(data)
+      if data?
+        @cache_hits++
+        _.extend vine, data
+        return fn(vine)
+      else
+        # we've checked this before, and it was broken, so ignore now
+        return fn(null)
+
+    # fetch the vine page, and regex out what we need
+    await @request.get vine_url, defer err, response, body
+
     m = body.match /property="twitter:image"\s+content="([^"]+)"/
     vine.image = m[1] if m?
 
     m = body.match /property="twitter:player:stream"\s+content="([^"]+)"/
     vine.video = m[1] if m?
 
-    cacheVine(vine.id, vine)
-
     unless vine.image and vine.video
-      logger.error 'Could not get Vine image or video for ' + vine_url + '>', vine
+      logger.error 'Could not get Vine image or video for ' + vine_url + '', vine
+      cache(null)
       return fn(null)
     
+    cache video: vine.video, image: vine.image
     fn(vine)
 
 

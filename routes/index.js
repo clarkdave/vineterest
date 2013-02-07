@@ -41,8 +41,7 @@ exports.vines = function(req, res) {
   ;
 
   jungle.getRecentVines(function(vines) {
-    console.log(vines);
-    res.send(200);
+    res.json(vines);
   });
 
 };
