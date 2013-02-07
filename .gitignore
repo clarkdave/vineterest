@@ -1,2 +1,4 @@
 node_modules
 public/css/*.css
+config/development.json
+config/test.json

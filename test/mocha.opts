@@ -1,0 +1,5 @@
+--require should
+--globals should
+--recursive
+--compilers coffee:coffee-script
+--reporter spec

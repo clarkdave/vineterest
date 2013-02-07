@@ -1,4 +1,9 @@
+var Jungle = require('../lib/jungle'),
+    jungle = new Jungle()
+;
 
+
+// TODO: bootstrap initial vines into the rendered HTML
 exports.index = function(req, res){
   res.render('index');
 };
@@ -30,6 +35,9 @@ exports.index = function(req, res){
  * @return {[type]}     [description]
  */
 exports.vines = function(req, res) {
+
+  var search = req.param('search')
+  ;
 
 
 
